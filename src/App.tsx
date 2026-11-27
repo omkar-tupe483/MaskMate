@@ -346,8 +346,15 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      <footer className="border-t border-slate-200 dark:border-slate-800/80 py-4 text-center text-xs text-slate-600 dark:text-slate-400">
-        MaskMate — 100% Client-Side PII Sanitizer • Strict CSP (<code className="text-cyan-700 dark:text-cyan-300">connect-src &apos;none&apos;</code>)
+      <footer className="border-t border-slate-200 dark:border-slate-800/80 py-4 text-center text-xs text-slate-600 dark:text-slate-400 space-y-1">
+        <p>MaskMate — 100% Client-Side PII Sanitizer • Strict CSP (<code className="text-cyan-700 dark:text-cyan-300">connect-src &apos;none&apos;</code>)</p>
+        <p>
+          <a href="/privacy.html" className="underline hover:text-cyan-600 dark:hover:text-cyan-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded">Privacy Policy</a>
+          {' · '}
+          <a href="/terms.html" className="underline hover:text-cyan-600 dark:hover:text-cyan-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded">Terms of Service</a>
+          {' · '}
+          <span>© 2026 MaskMate Contributors · MIT License</span>
+        </p>
       </footer>
 
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'none'; style-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Privacy Policy — MaskMate</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1.5rem; line-height: 1.7; color: #1e293b; }
+    h1 { color: #0f172a; } h2 { margin-top: 2rem; color: #0f172a; }
+    a { color: #0369a1; } footer { margin-top: 3rem; font-size: 0.85rem; color: #64748b; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #0f172a; color: #e2e8f0; } h1,h2 { color: #f1f5f9; } a { color: #38bdf8; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy</h1>
+  <p><strong>Effective date:</strong> 27 November 2026 &nbsp;|&nbsp; <strong>Last updated:</strong> 27 November 2026</p>
+
+  <h2>1. Who we are</h2>
+  <p>MaskMate is a free, open-source, 100 % client-side PII (Personally Identifiable Information) sanitisation tool. It runs entirely inside your web browser. There is no company, no servers, and no backend.</p>
+
+  <h2>2. Data we collect — none</h2>
+  <p>MaskMate collects <strong>zero personal data</strong>. Specifically:</p>
+  <ul>
+    <li>No text you paste or upload is ever sent anywhere.</li>
+    <li>No analytics, telemetry, or tracking scripts are loaded.</li>
+    <li>No cookies are set.</li>
+    <li>No localStorage, sessionStorage, or IndexedDB entries are created.</li>
+    <li>No network requests are made after the page loads. The Content Security Policy header <code>connect-src 'none'</code> enforces this at the browser level.</li>
+  </ul>
+  <p>All PII detection and redaction happens in-memory inside your browser tab. When you close or refresh the page, all data is gone.</p>
+
+  <h2>3. Aadhaar &amp; PAN handling</h2>
+  <p>MaskMate detects patterns that resemble Aadhaar and PAN numbers solely to <em>redact them</em>. It does not store, transmit, authenticate, or validate any such number against any government database. This is consistent with UIDAI's advisory against storing or transmitting Aadhaar numbers and with the IT (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011.</p>
+
+  <h2>4. Compliance</h2>
+  <ul>
+    <li><strong>India — DPDP Act 2023:</strong> No personal data is collected or processed on any server. The tool acts as a local processor under the user's own control.</li>
+    <li><strong>India — IT Act 2000 / IT Rules 2011:</strong> No sensitive personal data is transmitted or stored.</li>
+    <li><strong>EU — GDPR:</strong> No personal data is transferred outside your device. No legal basis for processing is required because no processing occurs server-side.</li>
+    <li><strong>Cookies / ePrivacy Directive:</strong> No cookies are set; no consent banner is required.</li>
+  </ul>
+
+  <h2>5. Third-party services</h2>
+  <p>None. MaskMate loads no third-party scripts, fonts, analytics, CDN resources, or tracking pixels at runtime.</p>
+
+  <h2>6. Children</h2>
+  <p>MaskMate is a developer/professional tool not directed at children under 13 (or 18 under DPDP Act 2023). We do not knowingly collect data from children because we do not collect data from anyone.</p>
+
+  <h2>7. Changes to this policy</h2>
+  <p>If this policy changes, the "Last updated" date above will be revised. Because we collect no data, changes will typically relate only to legal clarifications.</p>
+
+  <h2>8. Contact</h2>
+  <p>Questions about this policy? Open an issue on the <a href="https://github.com/omkar-tumati/MaskMate" rel="noopener noreferrer">GitHub repository</a> or email <a href="mailto:privacy@maskmate.app">privacy@maskmate.app</a>.</p>
+
+  <footer>
+    <p><a href="/">← Back to MaskMate</a> &nbsp;|&nbsp; <a href="/terms.html">Terms of Service</a></p>
+    <p>© 2026 MaskMate Contributors. Licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.</p>
+  </footer>
+</body>
+</html>
+
