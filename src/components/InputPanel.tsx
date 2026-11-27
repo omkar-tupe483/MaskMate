@@ -6,6 +6,7 @@ interface InputPanelProps {
   onLoadSample: () => void;
   onClear: () => void;
   onFileUpload: (content: string, fileName: string) => void;
+  onError: (message: string) => void;
   errorMessage?: string | null;
   onClearError?: () => void;
   fileName?: string | null;
@@ -17,12 +18,14 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   onLoadSample,
   onClear,
   onFileUpload,
+  onError,
   errorMessage,
   onClearError,
   fileName,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
+  const [isReadingFile, setIsReadingFile] = React.useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -32,19 +35,29 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   };
 
   const processFile = (file: File) => {
-    const ext = file.name.split('.').pop()?.toLowerCase();
+    const parts = file.name.split('.');
+    const ext = parts.length > 1 ? parts.pop()?.toLowerCase() : '';
     if (ext !== 'txt' && ext !== 'csv') {
-      alert(`Invalid file type: .${ext}. Only .txt and .csv files are supported.`);
+      onError(
+        `Unsupported file type${ext ? ` (.${ext})` : ''}. Please upload a .txt or .csv file.`
+      );
       return;
     }
 
+    setIsReadingFile(true);
     const reader = new FileReader();
     reader.onload = (event) => {
-      const content = event.target?.result as string;
-      onFileUpload(content, file.name);
+      setIsReadingFile(false);
+      const content = event.target?.result;
+      if (typeof content === 'string') {
+        onFileUpload(content, file.name);
+      } else {
+        onError('Failed to decode file contents as text.');
+      }
     };
     reader.onerror = () => {
-      alert('Failed to read file. Please ensure it is a valid text file.');
+      setIsReadingFile(false);
+      onError('Failed to read file. Please ensure it is a valid .txt or .csv file.');
     };
     reader.readAsText(file);
   };
@@ -155,6 +168,15 @@ export const InputPanel: React.FC<InputPanelProps> = ({
           spellCheck={false}
           aria-label="Input text for PII sanitization"
         />
+
+        {isReadingFile && (
+          <div className="absolute inset-0 flex items-center justify-center bg-slate-950/80 pointer-events-none backdrop-blur-xs">
+            <div className="text-cyan-300 font-medium text-sm flex items-center space-x-2">
+              <span className="h-4 w-4 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin" />
+              <span>Reading file locally...</span>
+            </div>
+          </div>
+        )}
 
         {isDragging && (
           <div className="absolute inset-0 flex items-center justify-center bg-slate-950/80 pointer-events-none backdrop-blur-xs">

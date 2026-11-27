@@ -122,6 +122,13 @@ describe('PII Detection Engine', () => {
     expect(result.entities.filter((e) => e.type === 'CREDIT_CARD').length).toBe(0);
     expect(result.rejectedLuhnCount).toBe(2);
   });
+
+  it('detects full and compressed IPv6 addresses while ignoring ISO timestamps', () => {
+    const text = 'At 2026-11-27T10:14:35Z node fe80::1ff:fe23:4567:890a and ::1 connected from 192.168.1.256.';
+    const result = detectPII(text);
+    const ips = result.entities.filter((e) => e.type === 'IP').map((e) => e.value);
+    expect(ips).toEqual(['fe80::1ff:fe23:4567:890a', '::1']);
+  });
 });
 
 describe('Redaction Modes & Pseudonymization', () => {

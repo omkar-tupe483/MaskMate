@@ -210,8 +210,8 @@ export function detectIPs(text: string): Entity[] {
     }
   }
 
-  // IPv6 candidate regex
-  const ipv6Regex = /\b(?:[0-9a-fA-F]{1,4}:){2,7}[0-9a-fA-F]{1,4}\b|(?:\b[0-9a-fA-F]{1,4}::[0-9a-fA-F]{1,4}\b)|(?:::1\b)|(?:\b::ffff:(?:\d{1,3}\.){3}\d{1,3}\b)/gi;
+  // IPv6 candidate regex: matches full and compressed IPv6 tokens (validated strictly by validateIPv6)
+  const ipv6Regex = /(?<![0-9a-fA-F:])(?:[0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}(?![0-9a-fA-F:])/gi;
   while ((match = ipv6Regex.exec(text)) !== null) {
     const raw = match[0];
     if (validateIPv6(raw)) {

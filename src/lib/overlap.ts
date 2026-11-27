@@ -17,60 +17,30 @@ export const TYPE_PRIORITY: Record<EntityType, number> = {
 
 /**
  * Deterministically resolves overlaps among candidate entities.
- * Ensures no overlapping entities are returned.
+ * Sorts by priority DESC, length DESC, start ASC, then greedily accepts
+ * non-overlapping entities and returns them sorted by start ASC.
  */
 export function resolveOverlaps(candidates: Entity[]): Entity[] {
   if (candidates.length <= 1) return [...candidates];
 
-  // Sort candidates primarily by start index, then priority descending, then length descending
-  const sorted = [...candidates].sort((a, b) => {
-    if (a.start !== b.start) {
-      return a.start - b.start;
-    }
+  const ranked = [...candidates].sort((a, b) => {
     const pDiff = TYPE_PRIORITY[b.type] - TYPE_PRIORITY[a.type];
     if (pDiff !== 0) return pDiff;
-    return (b.end - b.start) - (a.end - a.start);
+    const lenDiff = (b.end - b.start) - (a.end - a.start);
+    if (lenDiff !== 0) return lenDiff;
+    return a.start - b.start;
   });
 
   const resolved: Entity[] = [];
 
-  for (const current of sorted) {
-    let hasOverlap = false;
-
-    for (let i = 0; i < resolved.length; i++) {
-      const existing = resolved[i];
-      // Check for overlap: max(start) < min(end)
-      if (Math.max(current.start, existing.start) < Math.min(current.end, existing.end)) {
-        hasOverlap = true;
-        // Determine which one wins
-        const existingPriority = TYPE_PRIORITY[existing.type];
-        const currentPriority = TYPE_PRIORITY[current.type];
-
-        let currentWins = false;
-        if (currentPriority > existingPriority) {
-          currentWins = true;
-        } else if (currentPriority === existingPriority) {
-          const currentLen = current.end - current.start;
-          const existingLen = existing.end - existing.start;
-          if (currentLen > existingLen) {
-            currentWins = true;
-          }
-        }
-
-        if (currentWins) {
-          // Replace existing with current
-          resolved[i] = current;
-        }
-        break;
-      }
-    }
-
-    if (!hasOverlap) {
+  for (const current of ranked) {
+    const overlapsExisting = resolved.some(
+      (existing) => Math.max(current.start, existing.start) < Math.min(current.end, existing.end)
+    );
+    if (!overlapsExisting) {
       resolved.push(current);
     }
   }
 
-  // Final sort by start index
   return resolved.sort((a, b) => a.start - b.start);
 }
-

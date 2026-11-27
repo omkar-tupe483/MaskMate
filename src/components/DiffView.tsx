@@ -6,6 +6,7 @@ interface DiffViewProps {
   originalText: string;
   detectedEntities: Entity[];
   redactionResult: RedactionResult;
+  activeTypes: Set<EntityType>;
 }
 
 // Styling classes for detected entities: color-blind accessible with background, border, and underline styling
@@ -52,8 +53,9 @@ export const DiffView: React.FC<DiffViewProps> = ({
   originalText,
   detectedEntities,
   redactionResult,
+  activeTypes,
 }) => {
-  const [hoveredEntityIdx, setHoveredEntityIdx] = useState<number | null>(null);
+  const [hoveredEntityStart, setHoveredEntityStart] = useState<number | null>(null);
 
   const leftPaneRef = useRef<HTMLDivElement>(null);
   const rightPaneRef = useRef<HTMLDivElement>(null);
@@ -110,19 +112,22 @@ export const DiffView: React.FC<DiffViewProps> = ({
       }
 
       const style = TYPE_STYLES[entity.type];
-      const isHovered = hoveredEntityIdx === idx;
+      const isActive = activeTypes.has(entity.type);
+      const isHovered = hoveredEntityStart === entity.start;
 
       segments.push(
         <mark
-          key={`orig-entity-${idx}`}
-          onMouseEnter={() => setHoveredEntityIdx(idx)}
-          onMouseLeave={() => setHoveredEntityIdx(null)}
+          key={`orig-entity-${entity.start}-${idx}`}
+          onMouseEnter={() => setHoveredEntityStart(entity.start)}
+          onMouseLeave={() => setHoveredEntityStart(null)}
           className={`cursor-pointer rounded-xs px-1 py-0.5 transition-all inline font-mono ${
-            style.bg
-          } ${style.border} ${style.text} ${
+            isActive
+              ? `${style.bg} ${style.border} ${style.text}`
+              : 'bg-slate-800/60 border-b border-dashed border-slate-500 text-slate-400 opacity-75'
+          } ${
             isHovered ? 'ring-2 ring-white/90 scale-105 z-10 font-semibold' : ''
           }`}
-          title={`${entity.type}: ${entity.value} (Confidence: ${Math.round(entity.confidence * 100)}%)`}
+          title={`${entity.type}${isActive ? '' : ' (excluded)'}: ${entity.value} (Confidence: ${Math.round(entity.confidence * 100)}%)`}
         >
           {originalText.substring(entity.start, entity.end)}
         </mark>
@@ -163,13 +168,13 @@ export const DiffView: React.FC<DiffViewProps> = ({
 
       const entityType = item.originalEntity.type;
       const style = TYPE_STYLES[entityType];
-      const isHovered = hoveredEntityIdx === idx;
+      const isHovered = hoveredEntityStart === item.originalEntity.start;
 
       segments.push(
         <mark
-          key={`sanit-entity-${idx}`}
-          onMouseEnter={() => setHoveredEntityIdx(idx)}
-          onMouseLeave={() => setHoveredEntityIdx(null)}
+          key={`sanit-entity-${item.originalEntity.start}-${idx}`}
+          onMouseEnter={() => setHoveredEntityStart(item.originalEntity.start)}
+          onMouseLeave={() => setHoveredEntityStart(null)}
           className={`cursor-pointer rounded-xs px-1 py-0.5 transition-all inline font-mono ${
             style.bg
           } ${style.border} ${style.text} ${

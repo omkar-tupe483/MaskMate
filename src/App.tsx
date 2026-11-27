@@ -154,6 +154,7 @@ export const App: React.FC = () => {
               onLoadSample={handleLoadSample}
               onClear={handleClear}
               onFileUpload={handleFileUpload}
+              onError={setErrorMessage}
               errorMessage={errorMessage}
               onClearError={() => setErrorMessage(null)}
               fileName={uploadedFileName}
@@ -200,6 +201,7 @@ export const App: React.FC = () => {
           originalText={debouncedText}
           detectedEntities={detectionResult.entities}
           redactionResult={redactionResult}
+          activeTypes={activeTypes}
         />
 
         {/* Pseudonym Mapping Table (Visible when in pseudonym mode or when mappings exist) */}
